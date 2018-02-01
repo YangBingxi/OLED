@@ -1,0 +1,68 @@
+/*******************************************
+开发坏境:CCSv7.0
+开发板:TIVA C Launchpad(TM4C123GH6PM)
+程序功能:16位定时器，单次定时模式和周期性定时模式
+程序说明:
+编程者: Young sw
+********************************************/
+#include <stdint.h>
+#include <stdbool.h>
+
+#include "inc/hw_types.h"
+#include "inc/hw_memmap.h"
+#include "inc/hw_gpio.h"
+#include "inc/hw_ints.h"
+#include "driverlib/sysctl.h"
+#include "driverlib/pin_map.h"
+#include "driverlib/timer.h"
+#include "driverlib/gpio.h"
+#include "driverlib/adc.h"
+#include "driverlib/pwm.h"
+#include "delay.h"
+#include "oled.h"
+#include "bmp.h"
+int main(void)
+{
+    SysCtlClockSet(SYSCTL_SYSDIV_2_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
+
+    uint8_t t;
+    OLED_Init();            //初始化OLED
+    OLED_Clear();
+
+    t=' ';
+    OLED_ShowCHinese(12,0,0);//显
+    OLED_ShowCHinese(30,0,1);//示
+    OLED_ShowCHinese(48,0,2);//测
+    OLED_ShowCHinese(66,0,3);//试
+    OLED_ShowCHinese(84,0,4);//实
+    OLED_ShowCHinese(102,0,5);//验
+    while(1)
+    {
+        OLED_Clear();
+        OLED_ShowCHinese(12,0,0);//显
+        OLED_ShowCHinese(30,0,1);//示
+        OLED_ShowCHinese(48,0,2);//测
+        OLED_ShowCHinese(66,0,3);//试
+        OLED_ShowCHinese(84,0,4);//实
+        OLED_ShowCHinese(102,0,5);//验
+
+        OLED_ShowString(6,3,"0.96' OLED TEST",16);
+        //OLED_ShowString(8,2,"ZHONGJINGYUAN");
+        //OLED_ShowString(20,4,"2014/05/01");
+        OLED_ShowString(0,6,"ASCII:",16);
+        OLED_ShowString(63,6,"CODE:",16);
+        OLED_ShowChar(48,6,t,16);       //显示ASCII字符
+        t++;
+        if(t>'~')t=' ';
+        OLED_ShowNum(103,6,t,3,16);     //显示ASCII字符的码值
+
+        Delay_ms(1500);
+        OLED_DrawBMP(0,0,128,8,BMP1);   //图片显示(图片显示慎用，生成的字表较大，会占用较多空间，FLASH空间8K以下慎用)
+        Delay_ms(1500);
+        OLED_DrawBMP(0,0,128,8,BMP2);
+        Delay_ms(1500);
+        OLED_DrawBMP(0,0,128,8,BMP3);
+        Delay_ms(1500);
+
+    }
+}
